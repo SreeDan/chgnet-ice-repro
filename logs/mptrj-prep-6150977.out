@@ -1,0 +1,42 @@
+---------------------------------------
+Begin Slurm Prolog: Oct-10-2026 14:23:21
+Job ID:    6150977
+User ID:   sdandibhotla3
+Account:   coc
+Job name:  chgnet-data
+Partition: coc-cpu
+QOS:       coc-ice
+---------------------------------------
+Starting MPtrj preparation
+Sat Oct 10 18:23:29 UTC 2026
+{
+  "article_url": "https://figshare.com/articles/dataset/23713842/2",
+  "api_metadata_url": "https://api.figshare.com/v2/articles/23713842/versions/2",
+  "article_id": 23713842,
+  "article_version": 2,
+  "figshare_file_id": 41619375,
+  "original_filename": "MPtrj_2022.9_full.json",
+  "original_download_url": "https://ndownloader.figshare.com/files/41619375",
+  "expected_bytes": 12188168685,
+  "retrieved_utc": "2026-10-10T18:29:43.267423+00:00",
+  "local_file": "/home/hice1/sdandibhotla3/scratch/chgnet-mptrj/mptrj_source",
+  "local_sha256": "05a675acd4f17a1dadd8a4ea6ea79fe58d3ffb28ca20277383b8f990d4787cf6"
+}
+Manifest written to /home/hice1/sdandibhotla3/scratch/chgnet-mptrj/mptrj_source.manifest.json
+Selected 24 structures from 145923 materials (131483 eligible) -> inputs/mptrj_subset.json
+Subset SHA256: 074b888bee51ee86e1a588ce4a87da43bbd0c91e77653858952abaf9f5769a87
+WARNING: This is not the published held-out test split.
+Data preparation completed
+Sat Oct 10 18:37:17 UTC 2026
+---------------------------------------
+Begin Slurm Epilog: Oct-10-2026 14:37:17
+Job ID:        6150977
+User ID:       sdandibhotla3
+Account:       coc
+Job name:      chgnet-data
+Resources:     cpu=4,mem=16G,node=1
+Rsrc Used:     cput=00:55:44,vmem=0,walltime=00:13:56,mem=12002928K,energy_used=0
+Partition:     coc-cpu
+QOS:           coc-ice
+Nodes:         atl1-1-02-003-19-1
+---------------------------------------
