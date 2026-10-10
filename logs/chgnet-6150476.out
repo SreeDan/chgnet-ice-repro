@@ -1,0 +1,36 @@
+---------------------------------------
+Begin Slurm Prolog: Oct-10-2026 13:30:47
+Job ID:    6150476
+User ID:   sdandibhotla3
+Account:   coc
+Job name:  chgnet-infer
+Partition: coc-gpu
+QOS:       coc-ice
+---------------------------------------
+UTC START: 2026-10-10T17:30:54Z
+NODE: atl1-1-01-005-9-0.pace.gatech.edu | JOB: 6150476 | MODE: smoke
+Environment snapshot: results/slurm-6150476
+Wrote results/slurm-6150476/run_metadata.json
+CHGNet v0.3.0 initialized with 412,525 parameters
+CHGNet will run on cuda
+Wrote results/slurm-6150476/smoke_predictions.json
+Wrote results/slurm-6150476/smoke_validation.json
+SMOKE STATUS: PASS
+  finite_shapes: PASS
+  periodic_translation_invariance: PASS
+  newtons_third_law_total_force: PASS
+  finite_difference_force: PASS
+Wrote results/slurm-6150476/run_metadata.json
+UTC END: 2026-10-10T17:31:06Z
+---------------------------------------
+Begin Slurm Epilog: Oct-10-2026 13:31:06
+Job ID:        6150476
+User ID:       sdandibhotla3
+Account:       coc
+Job name:      chgnet-infer
+Resources:     cpu=4,gres/gpu:a40=1,mem=16G,node=1
+Rsrc Used:     cput=00:01:16,vmem=0,walltime=00:00:19,mem=84180K,energy_used=0
+Partition:     coc-gpu
+QOS:           coc-ice
+Nodes:         atl1-1-01-005-9-0
+---------------------------------------

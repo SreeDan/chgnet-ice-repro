@@ -1,0 +1,45 @@
+{
+  "utc_started": "2026-10-10T17:31:04.491431+00:00",
+  "host": "atl1-1-01-005-9-0.pace.gatech.edu",
+  "platform": "Linux-5.14.0-687.49.1.el9_8.x86_64-x86_64-with-glibc2.34",
+  "python": "3.11.17 (main, Oct  7 2026, 00:02:24) [GCC 15.3.0]",
+  "versions": {
+    "chgnet": "0.4.2",
+    "torch": "2.5.1",
+    "pymatgen": "2025.1.9",
+    "ase": "3.26.0",
+    "numpy": "1.26.4"
+  },
+  "torch_cuda_build": "12.4",
+  "cuda_available": true,
+  "gpu": {
+    "name": "NVIDIA A40",
+    "memory_bytes": 47752937472
+  },
+  "requested_device": "cuda",
+  "model_checkpoint_id": "0.3.0",
+  "checkpoint_path": "/home/hice1/sdandibhotla3/scratch/conda-envs/chgnet-repro/lib/python3.11/site-packages/chgnet/pretrained/0.3.0/chgnet_0.3.0_e29f68s314m37.pth.tar",
+  "checkpoint_sha256": "d14ab7c0f093efe64b60a7bcd540bca10e74fb7f46c86108a079af60524659d1",
+  "slurm": {
+    "SLURM_JOB_ID": "6150476",
+    "SLURM_JOB_NAME": "chgnet-infer",
+    "SLURM_JOB_PARTITION": "coc-gpu",
+    "SLURM_JOB_QOS": "coc-ice",
+    "SLURM_JOB_ACCOUNT": "coc",
+    "SLURM_CPUS_PER_TASK": "4",
+    "SLURM_JOB_NODELIST": "atl1-1-01-005-9-0",
+    "SLURM_GPUS": null,
+    "CUDA_VISIBLE_DEVICES": "0",
+    "SLURM_MEM_PER_NODE": "16384"
+  },
+  "command": [
+    "scripts/run_inference.py",
+    "smoke",
+    "--device",
+    "cuda",
+    "--out-dir",
+    "results/slurm-6150476"
+  ],
+  "wall_seconds_including_model_loading": 1.449062503001187,
+  "utc_finished": "2026-10-10T17:31:05.959520+00:00"
+}

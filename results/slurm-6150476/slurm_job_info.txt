@@ -1,0 +1,31 @@
+JobId=6150476 JobName=chgnet-infer
+   UserId=sdandibhotla3(3299879) GroupId=gtperson(2626) MCS_label=N/A
+   Priority=583340 Nice=0 Account=coc QOS=coc-ice
+   JobState=RUNNING Reason=None Dependency=(null)
+   Requeue=1 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=00:00:08 TimeLimit=01:00:00 TimeMin=N/A
+   SubmitTime=2026-10-10T13:30:46 EligibleTime=2026-10-10T13:30:46
+   AccrueTime=2026-10-10T13:30:46
+   StartTime=2026-10-10T13:30:47 EndTime=2026-10-10T14:30:47 Deadline=N/A
+   PreemptEligibleTime=2026-10-10T14:00:47 PreemptTime=None
+   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2026-10-10T13:30:47 Scheduler=Main
+   Partition=coc-gpu AllocNode:Sid=login-ice-gnr-1.pace.gatech.edu:1106301
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=atl1-1-01-005-9-0
+   BatchHost=atl1-1-01-005-9-0
+   NumNodes=1 NumCPUs=4 NumTasks=1 CPUs/Task=4 ReqB:S:C:T=0:0:*:*
+   ReqTRES=cpu=4,mem=16G,node=1,billing=4,gres/gpu=1
+   AllocTRES=cpu=4,mem=16G,node=1,billing=4,gres/gpu=1,gres/gpu:a40=1
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   MinCPUsNode=4 MinMemoryNode=16G MinTmpDiskNode=0
+   Features=cuda13 DelayBoot=00:00:00
+   OverSubscribe=NO Exclusive=NO Contiguous=0 Licenses=(null) LicensesAlloc=(null) Network=(null)
+   Command=/storage/ice1/7/9/sdandibhotla3/chgnet-ice-repro/jobs/ice_gpu.sbatch
+   SubmitLine=sbatch --qos=coc-ice jobs/ice_gpu.sbatch smoke
+   WorkDir=/storage/ice1/7/9/sdandibhotla3/chgnet-ice-repro
+   StdErr=/storage/ice1/7/9/sdandibhotla3/chgnet-ice-repro/logs/chgnet-6150476.err
+   StdIn=/dev/null
+   StdOut=/storage/ice1/7/9/sdandibhotla3/chgnet-ice-repro/logs/chgnet-6150476.out
+   TresPerNode=gres/gpu:1
+   TresPerTask=cpu=4
+

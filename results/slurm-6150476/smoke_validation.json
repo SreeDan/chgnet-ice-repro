@@ -1,0 +1,32 @@
+{
+  "status": "PASS",
+  "checks": {
+    "finite_shapes": {
+      "expected": "finite energy, Nx3 forces, 3x3 stress, N moments",
+      "observed": "all finite and correctly shaped; N=8",
+      "pass": true
+    },
+    "periodic_translation_invariance": {
+      "expected": "change in energy < 0.001 eV/atom",
+      "observed_energy_difference_ev_per_atom": 0.0,
+      "threshold": 0.001,
+      "pass": true
+    },
+    "newtons_third_law_total_force": {
+      "expected": "norm(sum of atom forces) < 0.1 eV/Angstrom",
+      "observed_total_force_norm_ev_per_angstrom": 7.487740830422111e-08,
+      "threshold": 0.1,
+      "pass": true
+    },
+    "finite_difference_force": {
+      "expected": "analytic force ~= -d(E_total)/dx, central difference",
+      "observed_model_force_ev_per_angstrom": -0.3081684708595276,
+      "observed_numeric_force_ev_per_angstrom": -0.3070831298828125,
+      "absolute_error_ev_per_angstrom": 0.0010853409767150879,
+      "step_angstrom": 0.005,
+      "tolerance_ev_per_angstrom": 0.16540842354297638,
+      "pass": true
+    }
+  },
+  "limitations": "Invariance and derivative checks verify internal physical consistency, not DFT accuracy."
+}
