@@ -1,0 +1,60 @@
+{
+  "status": "COMPLETED",
+  "subset_path": "inputs/mptrj_subset.json",
+  "subset_sha256": "074b888bee51ee86e1a588ce4a87da43bbd0c91e77653858952abaf9f5769a87",
+  "source_provenance": {
+    "source": "Materials Project Trajectory (MPtrj), Figshare article 23713842 version 2",
+    "source_url": "https://doi.org/10.6084/m9.figshare.23713842.v2",
+    "source_file_sha256": "05a675acd4f17a1dadd8a4ea6ea79fe58d3ffb28ca20277383b8f990d4787cf6",
+    "source_download_manifest": {
+      "article_url": "https://figshare.com/articles/dataset/23713842/2",
+      "api_metadata_url": "https://api.figshare.com/v2/articles/23713842/versions/2",
+      "article_id": 23713842,
+      "article_version": 2,
+      "figshare_file_id": 41619375,
+      "original_filename": "MPtrj_2022.9_full.json",
+      "original_download_url": "https://ndownloader.figshare.com/files/41619375",
+      "expected_bytes": 12188168685,
+      "retrieved_utc": "2026-10-10T18:29:43.267423+00:00",
+      "local_file": "/home/hice1/sdandibhotla3/scratch/chgnet-mptrj/mptrj_source",
+      "local_sha256": "05a675acd4f17a1dadd8a4ea6ea79fe58d3ffb28ca20277383b8f990d4787cf6"
+    },
+    "selection": "one eligible frame per material, lowest SHA256(seed:material_id) ranks",
+    "seed": 42,
+    "requested_structures": 24,
+    "min_atoms": 2,
+    "max_atoms": 64,
+    "material_ids_seen": 145923,
+    "material_ids_eligible": 131483,
+    "warning": "Deterministic full-MPtrj subset, NOT verified original held-out test partition"
+  },
+  "requested": 24,
+  "successful": 24,
+  "failed": 0,
+  "aggregate_mae": {
+    "energy_mev_per_atom": {
+      "mae": 23.81827404933516,
+      "count": 24
+    },
+    "force_mev_per_angstrom": {
+      "mae": 49.16204251656729,
+      "count": 1719
+    },
+    "stress_gpa": {
+      "mae": 0.20542198224973743,
+      "count": 216
+    },
+    "magmom_mu_b": {
+      "mae": 0.03150321919727454,
+      "count": 369
+    }
+  },
+  "published_chgnet_0_3_0_full_test_mae_for_context_only": {
+    "energy_mev_per_atom": 29,
+    "force_mev_per_angstrom": 68,
+    "stress_gpa": 0.314,
+    "magmom_mu_b": 0.037
+  },
+  "warning": "This deterministic MPtrj subset is NOT verified as the paper's held-out test set. Metric values are not a reproduction of published test MAEs.",
+  "failures": []
+}

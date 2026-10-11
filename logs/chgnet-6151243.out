@@ -1,0 +1,74 @@
+---------------------------------------
+Begin Slurm Prolog: Oct-10-2026 14:42:21
+Job ID:    6151243
+User ID:   sdandibhotla3
+Account:   coc
+Job name:  chgnet-infer
+Partition: coc-gpu
+QOS:       coc-ice
+---------------------------------------
+UTC START: 2026-10-10T18:42:27Z
+NODE: atl1-1-01-005-9-0.pace.gatech.edu | JOB: 6151243 | MODE: benchmark
+Environment snapshot: results/slurm-6151243
+Wrote results/slurm-6151243/run_metadata.json
+CHGNet v0.3.0 initialized with 412,525 parameters
+CHGNet will run on cuda
+Processed 1/24
+Processed 2/24
+Processed 3/24
+Processed 4/24
+Processed 5/24
+Processed 6/24
+Processed 7/24
+Processed 8/24
+Processed 9/24
+Processed 10/24
+Processed 11/24
+Processed 12/24
+Processed 13/24
+Processed 14/24
+Processed 15/24
+Processed 16/24
+Processed 17/24
+Processed 18/24
+Processed 19/24
+Processed 20/24
+Processed 21/24
+Processed 22/24
+Processed 23/24
+Processed 24/24
+Wrote results/slurm-6151243/benchmark_predictions.json
+Wrote results/slurm-6151243/benchmark_metrics.json
+AGGREGATE MAE: {
+  "energy_mev_per_atom": {
+    "mae": 23.81827404933516,
+    "count": 24
+  },
+  "force_mev_per_angstrom": {
+    "mae": 49.16204251656729,
+    "count": 1719
+  },
+  "stress_gpa": {
+    "mae": 0.20542198224973743,
+    "count": 216
+  },
+  "magmom_mu_b": {
+    "mae": 0.03150321919727454,
+    "count": 369
+  }
+}
+BENCHMARK STATUS: COMPLETED (24/24)
+Wrote results/slurm-6151243/run_metadata.json
+UTC END: 2026-10-10T18:44:28Z
+---------------------------------------
+Begin Slurm Epilog: Oct-10-2026 14:44:28
+Job ID:        6151243
+User ID:       sdandibhotla3
+Account:       coc
+Job name:      chgnet-infer
+Resources:     cpu=4,gres/gpu:a40=1,mem=16G,node=1
+Rsrc Used:     cput=00:08:28,vmem=0,walltime=00:02:07,mem=81888K,energy_used=0
+Partition:     coc-gpu
+QOS:           coc-ice
+Nodes:         atl1-1-01-005-9-0
+---------------------------------------
