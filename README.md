@@ -51,16 +51,26 @@ Before starting, connect to the GT VPN if necessary. Follow the campus's current
 ssh YOUR_GT_USERNAME@login-ice.pace.gatech.edu
 ```
 
-Clone this repository onto the cluster and run these from the repo root:
+On the cluster, clone the contribution branch using HTTPS (no GitHub SSH key is needed for this public repository), then run all remaining commands from the repository root:
 
 ```bash
-pwd
+git clone --branch part-2-portability https://github.com/SreeDan/chgnet-ice-repro.git
+cd chgnet-ice-repro
+git branch --show-current
 sinfo -o '%P %G %a %l'        # allowed partitions, GPU resources, wall limits
 pace-quota                     # check storage allocation
 module avail anaconda3        # verify installed environment module
 ```
 
 PACE ICE uses Slurm (`sbatch`, `squeue`, `sacct`). Your QoS may be `pace-ice`, `coc-ice`, or another value depending on your class/account. My successful run used `coc-ice`. If your account needs a partition or account flag, add the real one assigned to you.
+
+The checkout above should report `part-2-portability`. After this contribution is merged, use `--branch main` instead. Git, an ICE allocation with GPU access, the Anaconda module, and internet access for package installation are prerequisites. Cluster commands below use Bash; run `bash` first if your login shell differs.
+
+Set your assigned QoS once in the shell where you submit jobs. The value below is the one validated for my CoC allocation; replace it with your assigned value if different:
+
+```bash
+export CHGNET_QOS=coc-ice
+```
 
 `jobs/ice_gpu.sbatch` requests 1 GPU, 4 CPU cores, 16 GB RAM, and 1 hour. The actual GPU, runtime, and Slurm allocation are recorded in the result folders.
 
@@ -94,11 +104,10 @@ First, create the Slurm stdout/stderr directory before submitting (Slurm must op
 
 ```bash
 mkdir -p logs results
-sbatch --qos=pace-ice jobs/ice_gpu.sbatch smoke
-# CoC accounts may instead require: sbatch --qos=coc-ice jobs/ice_gpu.sbatch smoke
+sbatch --qos="$CHGNET_QOS" jobs/ice_gpu.sbatch smoke
 ```
 
-Save the job ID returned by `sbatch` (denoted `JOBID` below). Monitor and inspect:
+Save the job ID returned by `sbatch` (denoted `JOBID` below). Wait until the job leaves the queue before collecting accounting and verifying outputs:
 
 ```bash
 squeue -u "$USER"
@@ -110,7 +119,7 @@ sacct -j JOBID \
 python scripts/verify_artifacts.py --run results/slurm-JOBID --mode smoke
 ```
 
-Substitute the actual number for `JOBID`. The generated files are:
+Substitute the actual number for `JOBID`. Expect Slurm state `COMPLETED`, exit code `0:0`, and `PASS: smoke artifacts verified ...`. The generated files are:
 
 ```text
 results/slurm-JOBID/
@@ -132,48 +141,70 @@ The smoke job exits nonzero if one of the checks fails. This confirms the model 
 
 ## 6. Run the MPtrj benchmark
 
-This is the stronger validation step because it compares against archived DFT labels. The MPtrj archive is large, about 11.35 GB, so keep it on scratch/shared storage and do not download it inside every GPU job.
+This compares predictions against archived DFT labels. For the shortest reproduction, use the committed 24-structure subset. After completing sections 3–5, verify its checksum and submit inference directly:
 
-Step A: Download exact archived version (once). On an appropriate data-transfer/login system with internet access:
+```bash
+sha256sum -c inputs/mptrj_subset.sha256
+mkdir -p logs results
+sbatch --qos="$CHGNET_QOS" jobs/ice_gpu.sbatch benchmark inputs/mptrj_subset.json
+```
+
+Expect `inputs/mptrj_subset.json: OK`. Save the new benchmark job ID and use the completion checks below. You do not need the full source archive for this route.
+
+### Optional: regenerate the subset from the full archive
+
+The source archive is 12.19 GB (11.35 GiB). Choose persistent scratch/shared storage with room for the archive and environment; do not download it inside every GPU job. Replace the example path below with your allocated scratch location. This setting has no username or site-specific default:
+
+```bash
+export CHGNET_SCRATCH_DIR="/path/to/your/allocated/scratch/chgnet-mptrj"
+mkdir -p "$CHGNET_SCRATCH_DIR"
+```
+
+Choose **one** preparation route: the CPU job below, or manual steps A and B. Both regenerate the committed subset and its provenance. Keep the original evidence if you change sampling parameters.
+
+The CPU preparation job downloads the archive and creates the subset together:
+
+```bash
+mkdir -p logs results
+sbatch --export=ALL --qos="$CHGNET_QOS" jobs/prepare_mptrj.sbatch
+```
+
+Wait for this job to finish successfully before submitting benchmark inference. Check `squeue -u "$USER"`, the `logs/mptrj-prep-JOBID.out` and `.err` files, and `sacct -j JOBID --format=JobID,State,ExitCode`. Expect `COMPLETED` and `0:0`. The job writes the source to `$CHGNET_SCRATCH_DIR/mptrj_source`, copies its manifest into `docs/mptrj_source_manifest.json`, and writes `inputs/mptrj_subset.json` and `inputs/mptrj_subset.sha256`. It fails with a configuration message if the scratch variable is missing or relative.
+
+Manual step A: Download the exact archived version once on an appropriate data-transfer system with internet access:
 
 ```bash
 conda activate chgnet-repro
-mkdir -p /PATH/TO/YOUR/ALLOWED/SCRATCH/chgnet
 python scripts/download_mptrj.py \
-  --output /PATH/TO/YOUR/ALLOWED/SCRATCH/chgnet/mptrj_source
+  --output "$CHGNET_SCRATCH_DIR/mptrj_source"
+cp "$CHGNET_SCRATCH_DIR/mptrj_source.manifest.json" docs/mptrj_source_manifest.json
 ```
 
 The script downloads Figshare article 23713842 version 2, checks the byte count, and writes a manifest with the file ID, source URL, retrieval time, and SHA-256. If ICE cannot download it directly, download it from [Figshare](https://doi.org/10.6084/m9.figshare.23713842.v2), copy it to scratch, and keep the checksum.
 
-For my run, I used the provided CPU prep job, which does the download and subset selection together:
-
-```bash
-mkdir -p logs results
-sbatch --qos=coc-ice jobs/prepare_mptrj.sbatch
-```
-
-That job stores the large source file in `$HOME/scratch/chgnet-mptrj/`, copies the manifest into `docs/mptrj_source_manifest.json`, writes `inputs/mptrj_subset.json`, and records `inputs/mptrj_subset.sha256`. If your scratch path or QoS is different, change only those site-specific parts and record it.
-
-Step B: Create a deterministic, small subset. This uses a streaming JSON parser (`ijson`) to avoid loading the full dataset into system RAM:
+Manual step B: Create the subset on a CPU compute allocation (the CPU job above is recommended). This uses a streaming JSON parser (`ijson`) to avoid loading the full dataset into system RAM:
 
 ```bash
 python scripts/make_subset.py \
-  --input /PATH/TO/YOUR/ALLOWED/SCRATCH/chgnet/mptrj_source \
+  --input "$CHGNET_SCRATCH_DIR/mptrj_source" \
   --output inputs/mptrj_subset.json \
   --count 24 --seed 42 --min-atoms 2 --max-atoms 64
-sha256sum inputs/mptrj_subset.json
+sha256sum inputs/mptrj_subset.json > inputs/mptrj_subset.sha256
 ```
 
 The selector chooses at most one frame per material ID. It ranks materials using SHA-256 of `42:material_id` and keeps the 24 lowest ranks. This avoids hand-picking examples. The subset JSON includes the source checksum, seed, selection method, and selected IDs.
 
-Step C: Run benchmark inference on a GPU.
+After either preparation route, verify the subset checksum and submit benchmark inference on a GPU if you have not already submitted it:
 
 ```bash
 mkdir -p logs results
-sbatch --qos=pace-ice jobs/ice_gpu.sbatch benchmark inputs/mptrj_subset.json
+sha256sum -c inputs/mptrj_subset.sha256
+sbatch --qos="$CHGNET_QOS" jobs/ice_gpu.sbatch benchmark inputs/mptrj_subset.json
 ```
 
-After completion:
+### Check benchmark completion
+
+Wait for the benchmark job to finish (`squeue -u "$USER"`). Replace `JOBID` below with its actual job number, then inspect and verify:
 
 ```bash
 cat logs/chgnet-JOBID.out
@@ -184,7 +215,7 @@ sacct -j JOBID \
 python scripts/verify_artifacts.py --run results/slurm-JOBID --mode benchmark
 ```
 
-The main outputs are `benchmark_predictions.json`, `benchmark_metrics.json`, and `artifact_checksums.sha256`. See [docs/validation.md](docs/validation.md) for the units and caveats.
+Expect Slurm state `COMPLETED`, exit code `0:0`, metrics status `COMPLETED`, `successful: 24`, `failed: 0`, and `PASS: benchmark artifacts verified ...`. The main outputs are `benchmark_predictions.json`, `benchmark_metrics.json`, and `artifact_checksums.sha256`. See [docs/validation.md](docs/validation.md) for the units and caveats.
 
 ## 7. Evidence to keep
 

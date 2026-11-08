@@ -9,24 +9,30 @@
 #SBATCH --error=logs/mptrj-prep-%j.err
 
 set -euo pipefail
-cd "$SLURM_SUBMIT_DIR"
+cd "${SLURM_SUBMIT_DIR:?Submit this job from the repository root}"
+
+# Set this to persistent scratch/shared storage before calling sbatch.
+: "${CHGNET_SCRATCH_DIR:?Export CHGNET_SCRATCH_DIR to your allocated scratch directory before submitting}"
+case "$CHGNET_SCRATCH_DIR" in
+  /*) ;;
+  *) echo "CHGNET_SCRATCH_DIR must be an absolute path" >&2; exit 2 ;;
+esac
+mkdir -p "$CHGNET_SCRATCH_DIR" inputs
 
 module load anaconda3
 eval "$(conda shell.bash hook)"
 conda activate chgnet-repro
 
-mkdir -p "$HOME/scratch/chgnet-mptrj" inputs
-
 echo "Starting MPtrj preparation"
 date -u
 
 python scripts/download_mptrj.py \
-  --output "$HOME/scratch/chgnet-mptrj/mptrj_source"
-cp "$HOME/scratch/chgnet-mptrj/mptrj_source.manifest.json" \
+  --output "$CHGNET_SCRATCH_DIR/mptrj_source"
+cp "$CHGNET_SCRATCH_DIR/mptrj_source.manifest.json" \
   docs/mptrj_source_manifest.json
 
 python scripts/make_subset.py \
-  --input "$HOME/scratch/chgnet-mptrj/mptrj_source" \
+  --input "$CHGNET_SCRATCH_DIR/mptrj_source" \
   --output inputs/mptrj_subset.json \
   --count 24 \
   --seed 42 \
