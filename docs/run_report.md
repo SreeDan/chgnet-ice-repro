@@ -82,7 +82,7 @@ Verification output: `PASS: benchmark artifacts verified under results/slurm-615
 
 ## Reproduction verification by another student
 
-Follow `README.md` and `environment.yml` to create the environment. Then use `jobs/prepare_mptrj.sbatch` to download/select the MPtrj subset and `jobs/ice_gpu.sbatch` for smoke and benchmark inference. Use the QoS/account assigned to your ICE account.
+Follow `README.md` and `environment.yml` to create the environment. The committed `inputs/mptrj_subset.json` lets you run smoke and benchmark inference with `jobs/ice_gpu.sbatch` directly. Optionally regenerate the subset with `jobs/prepare_mptrj.sbatch` after exporting `CHGNET_SCRATCH_DIR` as an absolute path to your allocated scratch storage. Use the QoS/account assigned to your ICE account. The commands in the execution context above describe the original runs; follow the README for current configuration steps.
 
 The full 12.19 GB MPtrj archive is not committed to Git, but the URL, file ID, checksum, and retrieval procedure are documented.
 

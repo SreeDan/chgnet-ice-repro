@@ -14,6 +14,7 @@ These are the issues I expected or ran into while making the ICE workflow.
 | Checkpoint missing | Wrong CHGNet package/version | Use `chgnet==0.4.2` and verify the `pretrained/0.3.0` checkpoint file. |
 | Download fails | Figshare or cluster internet issue | Download Figshare version 2 elsewhere, copy to scratch, and record the SHA-256. |
 | `no space left on device` | MPtrj archive is too large for home | Check `pace-quota` and put the raw archive on scratch. |
+| Preparation reports missing or relative `CHGNET_SCRATCH_DIR` | Scratch location was not configured for the submitted job | Export `CHGNET_SCRATCH_DIR` as an absolute path to allocated persistent scratch, then submit with `sbatch --export=ALL --qos="$CHGNET_QOS" jobs/prepare_mptrj.sbatch`. The included subset lets you skip preparation entirely. |
 | MPtrj selection too slow | Large JSON scan | Run it as a CPU job, not as repeated GPU-job setup. |
 | Magnetic moments missing | Some labels are `None` | Skip moment MAE for that structure. Do not treat missing as zero. |
 | Stress error is huge | Wrong stress sign/unit conversion | Use `-0.1 * stress_kbar` before comparing to CHGNet GPa. |
